@@ -1,7 +1,12 @@
+#libs
+import face_recognition
+import numpy as np
+from PIL import Image
+
+
 #classes
 class FaceRegError(Exception):
     None
-
 
 class Face():
 
