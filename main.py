@@ -54,10 +54,10 @@ class Face():
         '''
         Сравнение лица с другим. На вход подаётся другое лицо в формате массива
         '''
-        if not face:
+        if type(self.face) != bool:
             NoData("Have not data for work")
         res = face_recognition.compare_faces([self.face], unface)
-        return res
+        return res[0]
 
     def verify(self, img, model_name='VGG-Face'):
         '''
