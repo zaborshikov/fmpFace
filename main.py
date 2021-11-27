@@ -11,14 +11,15 @@ class FaceRegError(Exception):
 
 
 class Face():
-    def __init__(self, path):
+    def __init__(self, path, face_encode=True):
         '''
         Создание лица. На вход подаётся массив numpy или название файла
         '''
         self.path = path
         try:
             self.img = self.file2img(path)
-            self.face = face_recognition.face_encodings(self.img)[0]
+            if face_encode:
+                self.face = face_recognition.face_encodings(self.img)[0]
         except:
             raise FaceRegError("Face registration error. The image is damaged or there is no face on it")
 
