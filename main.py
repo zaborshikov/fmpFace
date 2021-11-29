@@ -1,20 +1,23 @@
 #libs
 import face_recognition
 import numpy as np
+import dlib
 from PIL import Image
 from deepface import DeepFace as deepf
 
 
 #classes
 class FaceRegError(Exception):
-    pass
-
-
-class NoData(Exception):
+    '''
+    Класс ошибки решистрации лица
+    '''
     pass
 
 
 class Face():
+    '''
+    Класс содердащий данные о лице
+    '''
     def __init__(self, path='', face_encode=True, fromdata=False):
         '''
         Создание лица. На вход подаётся массив numpy или название файла
@@ -56,24 +59,6 @@ class Face():
         return {'img':self.img,
                 'face':self.face}
 
-    def check(self, unface:np.array):
-        '''
-        Сравнение лица с другим. На вход подаётся другое лицо в формате массива
-        '''
-
-        if type(self.face) != bool:
-            NoData("Have not data for work")
-        res = face_recognition.compare_faces([self.face], unface)
-        return res[0]
-
-    def verify(self, img, model_name='VGG-Face'):
-        '''
-        Сравнение лица с другим. На вход подаётся путь к изображению лица
-        '''
-        res = deepf.verify(img1_path=self.img, img2_path=img, model_name='VGG-Face')
-        return {"verifed": res['verified'],
-                "score": 1 - res['distance']}
-
     def emotion(self):
         '''
         Определение эмоции
@@ -90,4 +75,23 @@ class Face():
         return {'age':res['age'],
                 'gender':res['gender'],
                 'race':res['race']}
-                
+
+
+#functions
+def check(face_1, face_2, unface):
+    '''
+    Сравнение лица с другим с помощью библиотеки face_recognition
+    '''
+
+    res = face_recognition.compare_faces([face_1], face_2)
+    return res[0]
+
+def verify(img_1, img_2, model_name='VGG-Face'):
+    '''
+    Сравнение лица с другим с помощью библиотеки DeepFace
+    '''
+
+    # models = ["VGG-Face", "Facenet", "Facenet512", "OpenFace", "DeepFace", "DeepID", "ArcFace", "Dlib"]
+    res = deepf.verify(img1_path=img_1, img2_path=img_2, model_name='VGG-Face')
+    return {"verifed": res['verified'],
+            "score": 1 - res['distance']}
